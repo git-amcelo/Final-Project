@@ -1,0 +1,84 @@
+[
+{
+  "model": "workouts.workoutsession",
+  "pk": 3,
+  "fields": {
+    "title": "W1",
+    "description": "WD",
+    "creator": [
+      "chetansmac"
+    ],
+    "participant": [
+      "deepak"
+    ],
+    "session_type": "1on1",
+    "status": "accepted",
+    "scheduled_datetime": "2026-07-13T20:50:00Z",
+    "duration_minutes": 15,
+    "location": "Recreation Center",
+    "intensity": "moderate",
+    "focus_areas": [
+      "cardio"
+    ],
+    "equipment_needed": [],
+    "max_participants": 2,
+    "current_participants": 1,
+    "created_at": "2026-07-13T19:11:16.159Z",
+    "updated_at": "2026-07-13T20:49:27.712Z",
+    "notes": ""
+  }
+},
+{
+  "model": "workouts.workoutsession",
+  "pk": 4,
+  "fields": {
+    "title": "W2",
+    "description": "Aut sed voluptas eni",
+    "creator": [
+      "chetansmac"
+    ],
+    "participant": null,
+    "session_type": "1on1",
+    "status": "pending",
+    "scheduled_datetime": "2026-07-31T10:38:00Z",
+    "duration_minutes": 75,
+    "location": "Main Campus Gym",
+    "intensity": "moderate",
+    "focus_areas": [],
+    "equipment_needed": [],
+    "max_participants": 2,
+    "current_participants": 1,
+    "created_at": "2026-07-13T21:06:05.497Z",
+    "updated_at": "2026-07-13T21:06:05.497Z",
+    "notes": ""
+  }
+},
+{
+  "model": "workouts.sessionrequest",
+  "pk": 3,
+  "fields": {
+    "session": 3,
+    "requester": [
+      "deepak"
+    ],
+    "message": "",
+    "status": "accepted",
+    "created_at": "2026-07-13T20:27:02.589Z",
+    "responded_at": "2026-07-13T20:27:06.107Z"
+  }
+},
+{
+  "model": "workouts.sessionrequest",
+  "pk": 4,
+  "fields": {
+    "session": 4,
+    "requester": [
+      "deepak"
+    ],
+    "message": "",
+    "status": "pending",
+    "created_at": "2026-07-13T21:06:15.447Z",
+    "responded_at": null
+  }
+}
+]

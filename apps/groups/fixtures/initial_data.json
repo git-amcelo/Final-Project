@@ -1,0 +1,64 @@
+[
+{
+  "model": "groups.workoutgroup",
+  "pk": 8,
+  "fields": {
+    "name": "Marny Fox",
+    "slug": "marny-fox",
+    "description": "Quia adipisicing ali",
+    "tagline": "",
+    "group_type": "closed",
+    "max_members": 93,
+    "focus_areas": [
+      "cardio"
+    ],
+    "workout_frequency": "weekly",
+    "primary_location": "Repudiandae est vel",
+    "meeting_days": [],
+    "typical_time": "",
+    "fitness_level_required": "intermediate",
+    "equipment_needed": [],
+    "requirements": "",
+    "group_image": "",
+    "creator": [
+      "chetansmac"
+    ],
+    "member_count": 2,
+    "session_count": 0,
+    "is_active": true,
+    "is_featured": false,
+    "created_at": "2026-07-13T20:21:29.251Z",
+    "updated_at": "2026-07-13T20:21:29.251Z"
+  }
+},
+{
+  "model": "groups.groupmembership",
+  "pk": 8,
+  "fields": {
+    "group": 8,
+    "user": [
+      "chetansmac"
+    ],
+    "role": "admin",
+    "status": "active",
+    "joined_at": "2026-07-13T20:21:29.252Z",
+    "last_active": "2026-07-13T20:21:29.252Z",
+    "message": ""
+  }
+},
+{
+  "model": "groups.groupmembership",
+  "pk": 9,
+  "fields": {
+    "group": 8,
+    "user": [
+      "deepak"
+    ],
+    "role": "member",
+    "status": "active",
+    "joined_at": "2026-07-13T20:21:39.772Z",
+    "last_active": "2026-07-13T20:21:44.826Z",
+    "message": ""
+  }
+}
+]

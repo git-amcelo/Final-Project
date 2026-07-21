@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Blocked Users — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="Blocked Users" subtitle="People you've blocked won't appear in search, matching, or listings" %}
+
+<div class="container">
+    {% if blocked_users %}
+        <div class="row g-4 pb-5">
+            {% for blocked in blocked_users %}
+                {% with target=blocked.blocked profile=blocked.blocked.profile %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex gap-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                            {% else %}
+                                <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h2 class="h6 fw-bold mb-0">{{ target.get_full_name|default:target.username }}</h2>
+                                <div class="small text-muted">@{{ target.username }}</div>
+                                {% if blocked.reason %}
+                                    <div class="small text-muted mt-1">Reason: {{ blocked.reason }}</div>
+                                {% endif %}
+                            </div>
+                            <form method="post" action="{% url 'users_web:unblock' target.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'users_web:blocked' %}">
+                                <button type="submit" class="btn btn-sm btn-outline-dark">Unblock</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> You haven't blocked anyone.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

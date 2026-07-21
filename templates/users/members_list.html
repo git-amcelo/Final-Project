@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Find Buddies — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="Find Buddies" subtitle="Search members by fitness level and connect with compatible partners" %}
+
+<div class="container">
+    <div class="gb-filter-bar">
+        <form method="get" class="d-flex gap-2 flex-wrap w-100">
+            {{ search_form.q }}
+            {{ search_form.fitness_level }}
+            <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i> Search</button>
+        </form>
+    </div>
+
+    {% if profiles %}
+        <div class="row g-4 pb-5">
+            {% for profile in profiles %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex gap-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                            {% else %}
+                                <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h2 class="h6 fw-bold mb-0">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{% url 'users_web:member_detail' profile.pk %}">
+                                        {{ profile.user.get_full_name|default:profile.user.username }}
+                                    </a>
+                                </h2>
+                                <div class="small text-muted">@{{ profile.user.username }}</div>
+                                <span class="badge text-bg-warning mt-1">{{ profile.get_fitness_level_display }}</span>
+                                {% if profile.average_rating %}
+                                    <span class="badge text-bg-light mt-1">
+                                        <i class="bi bi-star-fill text-warning"></i> {{ profile.average_rating }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> No members matched your search. Try different keywords or filters.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

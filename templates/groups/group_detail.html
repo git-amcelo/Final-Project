@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card gb-card">
+                {% if group.group_image %}
+                    <img src="{{ group.group_image.url }}" class="card-img-top" alt=""
+                         style="max-height: 240px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <span class="badge text-bg-warning">{{ group.get_group_type_display }}</span>
+                            <span class="badge text-bg-light">{{ group.get_workout_frequency_display }}</span>
+                            <span class="badge text-bg-light">{{ group.get_fitness_level_required_display }}</span>
+                        </div>
+                        {% if user.is_authenticated %}
+                            {% if membership and membership.status == 'active' %}
+                                {% if membership.role == 'admin' %}
+                                    <span class="badge text-bg-dark align-self-center">You run this group</span>
+                                {% else %}
+                                    <form method="post" action="{% url 'groups_web:leave' group.slug %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-box-arrow-left"></i> Leave group
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% elif membership and membership.status == 'pending' %}
+                                <span class="badge text-bg-secondary align-self-center">Membership pending approval</span>
+                            {% else %}
+                                <form method="post" action="{% url 'groups_web:join' group.slug %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning fw-semibold">
+                                        <i class="bi bi-plus-circle"></i> Join group
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-dark">
+                                <i class="bi bi-lock"></i> Login to join
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="h3 fw-bold mt-3 mb-0">{{ group.name }}</h1>
+                    {% if group.tagline %}<p class="text-muted">{{ group.tagline }}</p>{% endif %}
+                    <p class="mt-2">{{ group.description }}</p>
+
+                    <div class="row small text-muted g-2">
+                        {% if group.primary_location %}
+                            <div class="col-md-6"><i class="bi bi-geo-alt"></i> {{ group.primary_location }}</div>
+                        {% endif %}
+                        {% if group.typical_time %}
+                            <div class="col-md-6"><i class="bi bi-clock"></i> {{ group.typical_time }}</div>
+                        {% endif %}
+                        <div class="col-md-6"><i class="bi bi-person"></i> Created by {{ group.creator.username }}</div>
+                        <div class="col-md-6"><i class="bi bi-people"></i>
+                            {{ group.member_count_actual }} / {{ group.max_members }} members</div>
+                    </div>
+
+                    <h2 class="h6 fw-bold mt-4"><i class="bi bi-people"></i> Members</h2>
+                    {% if active_members %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for m in active_members %}
+                                <span class="badge text-bg-light">
+                                    {{ m.user.username }}{% if m.role != 'member' %} · {{ m.get_role_display|truncatewords:1 }}{% endif %}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small mb-0">No active members yet.</p>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <h2 class="h6 fw-bold mb-0"><i class="bi bi-calendar-event"></i> Upcoming Sessions</h2>
+                        {% if can_manage %}
+                            <a href="{% url 'groups_web:session_create' group.slug %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-plus-lg"></i> Schedule a session
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% if upcoming_sessions %}
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            {% for s in upcoming_sessions %}
+                                <div class="small">
+                                    <span class="fw-semibold">{{ s.title }}</span>
+                                    <span class="text-muted">— {{ s.scheduled_datetime|date:"M j, g:i A" }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'groups_web:sessions' group.slug %}" class="small">View all sessions &rarr;</a>
+                    {% else %}
+                        <p class="text-muted small mb-0">No sessions scheduled yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if pending_memberships %}
+                <div class="card gb-card mt-4">
+                    <div class="card-body p-4">
+                        <h2 class="h6 fw-bold"><i class="bi bi-inbox"></i> Pending Requests</h2>
+                        <div class="d-flex flex-column gap-3 mt-2">
+                            {% for pm in pending_memberships %}
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="fw-semibold">{{ pm.user.username }}</span>
+                                        {% if pm.message %}
+                                            <div class="small text-muted fst-italic">&ldquo;{{ pm.message }}&rdquo;</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <form method="post" action="{% url 'groups_web:approve' group.slug pm.user.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-dark">Approve</button>
+                                        </form>
+                                        <form method="post" action="{% url 'groups_web:reject' group.slug pm.user.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <a href="{% url 'groups_web:list' %}" class="btn btn-link mt-3">&larr; All groups</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card gb-card gb-form-card">
+        <div class="card-body p-4">
+            <h1 class="h3 mb-1 fw-bold text-center">Join GymBuddy <i class="bi bi-lightning-charge-fill text-warning"></i></h1>
+            <p class="text-muted text-center mb-4">Free for University of Windsor students and alumni</p>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.username %}</div>
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.email %}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.first_name %}</div>
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.last_name %}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">{% include 'includes/field.html' with field=form.role %}</div>
+                    <div class="col-md-4">{% include 'includes/field.html' with field=form.student_id %}</div>
+                    <div class="col-md-4">{% include 'includes/field.html' with field=form.phone %}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.password1 %}</div>
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.password2 %}</div>
+                </div>
+                <button type="submit" class="btn btn-warning w-100 fw-semibold mt-2">
+                    <i class="bi bi-person-plus"></i> Create my account
+                </button>
+            </form>
+
+            <p class="text-center small mt-3 mb-0">
+                Already have an account? <a href="{% url 'login' %}">Login here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

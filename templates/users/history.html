@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}My History — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-clock-history"></i> Your activity on GymBuddy</h1>
+    <p class="text-muted mb-4">
+        Tracked with sessions and cookies — no account required.
+        {% if last_visit %}Your previous visit (from the <code>last_visit</code> cookie): <strong>{{ last_visit }}</strong>.{% endif %}
+    </p>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card gb-stat p-4 text-center">
+                <div class="display-6">{{ today_count }}</div>
+                <div class="text-muted">Page views today</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4 text-center">
+                <div class="display-6">{{ total_visits }}</div>
+                <div class="text-muted">Total tracked page views</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4 text-center">
+                <div class="display-6">{{ daily_counts|length }}</div>
+                <div class="text-muted">Active days</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card gb-card h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold"><i class="bi bi-calendar3"></i> Visits per day</h2>
+                    {% if daily_counts %}
+                        <table class="table table-sm align-middle mb-0">
+                            <thead><tr><th>Date</th><th class="text-end">Page views</th></tr></thead>
+                            <tbody>
+                                {% for day, count in daily_counts %}
+                                    <tr>
+                                        <td>{{ day }}</td>
+                                        <td class="text-end"><span class="badge text-bg-warning">{{ count }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="text-muted mb-0">No visits tracked yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card gb-card h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold"><i class="bi bi-list-ul"></i> Recently viewed pages</h2>
+                    {% if recent_pages %}
+                        <ul class="list-group list-group-flush">
+                            {% for page in recent_pages %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span>
+                                        <a href="{{ page.path }}" class="text-decoration-none">{{ page.label }}</a>
+                                        <span class="small text-muted d-block">{{ page.path }}</span>
+                                    </span>
+                                    <span class="small text-muted">{{ page.time }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">Browse the site and your recent pages will appear here.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-12">
+            <div class="card gb-card">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold"><i class="bi bi-people"></i> Recently viewed buddies</h2>
+                    {% if recent_profiles %}
+                        <div class="d-flex flex-wrap gap-3 mt-2">
+                            {% for profile in recent_profiles %}
+                                <a href="{% url 'users_web:member_detail' profile.pk %}"
+                                   class="text-decoration-none text-dark d-flex align-items-center gap-2">
+                                    {% if profile.profile_picture %}
+                                        <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                                    {% else %}
+                                        <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                            <i class="bi bi-person text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                    <span class="small fw-semibold">@{{ profile.user.username }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Buddy profiles you view will show up here.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

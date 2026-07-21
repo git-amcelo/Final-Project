@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Delete Session — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card gb-card gb-auth-card text-center">
+        <div class="card-body p-4">
+            <i class="bi bi-exclamation-triangle display-4 text-danger"></i>
+            <h1 class="h4 fw-bold mt-3">Delete "{{ session.title }}"?</h1>
+            <p class="text-muted">
+                This will permanently remove the session scheduled for
+                {{ session.scheduled_datetime|date:"M j, Y · g:i A" }}. This cannot be undone.
+            </p>
+            <form method="post" class="d-flex justify-content-center gap-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger fw-semibold">
+                    <i class="bi bi-trash"></i> Yes, delete it
+                </button>
+                <a href="{% url 'workouts_web:detail' session.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

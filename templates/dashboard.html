@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="Welcome back, "|add:user.username subtitle="Here's what's happening with your GymBuddy account" %}
+
+<div class="container my-4">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ profile.average_rating|default:"—" }}</div>
+                <div class="text-muted">Average rating ({{ profile.total_ratings }} review{{ profile.total_ratings|pluralize }})</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ stats.groups }}</div>
+                <div class="text-muted">Groups joined</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ stats.sessions }}</div>
+                <div class="text-muted">Workout sessions</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-4">
+            <a href="{% url 'matching_web:find' %}" class="card gb-card h-100 text-decoration-none text-dark">
+                <div class="card-body text-center">
+                    <i class="bi bi-people fs-2 text-warning"></i>
+                    <h2 class="h6 fw-bold mt-2 mb-0">Find Buddies</h2>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'workouts_web:create' %}" class="card gb-card h-100 text-decoration-none text-dark">
+                <div class="card-body text-center">
+                    <i class="bi bi-plus-circle fs-2 text-warning"></i>
+                    <h2 class="h6 fw-bold mt-2 mb-0">Book Workout</h2>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'groups_web:list' %}" class="card gb-card h-100 text-decoration-none text-dark">
+                <div class="card-body text-center">
+                    <i class="bi bi-diagram-3 fs-2 text-warning"></i>
+                    <h2 class="h6 fw-bold mt-2 mb-0">Join Groups</h2>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-calendar-event"></i> Upcoming Workouts</h2>
+        <a href="{% url 'workouts_web:list' %}?scope=mine" class="small">See all &rarr;</a>
+    </div>
+    {% if upcoming_workouts %}
+        <div class="row g-4">
+            {% for session in upcoming_workouts %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card gb-card h-100">
+                        <div class="card-body">
+                            <h3 class="h6 fw-bold mb-1">
+                                <a class="text-decoration-none text-dark"
+                                   href="{% url 'workouts_web:detail' session.pk %}">{{ session.title }}</a>
+                            </h3>
+                            <p class="small text-muted mb-0">
+                                <i class="bi bi-geo-alt"></i> {{ session.location }}<br>
+                                <i class="bi bi-clock"></i> {{ session.scheduled_datetime|date:"D, M j · g:i A" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No upcoming workouts —
+            <a href="{% url 'workouts_web:create' %}">book one</a>.</p>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-diagram-3"></i> My Groups</h2>
+        <a href="{% url 'groups_web:list' %}?scope=mine" class="small">See all &rarr;</a>
+    </div>
+    {% if my_groups %}
+        <div class="row g-4">
+            {% for group in my_groups %}
+                <div class="col-md-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body">
+                            <h3 class="h6 fw-bold mb-1">
+                                <a class="text-decoration-none text-dark"
+                                   href="{% url 'groups_web:detail' group.slug %}">{{ group.name }}</a>
+                            </h3>
+                            <p class="small text-muted mb-0">
+                                <i class="bi bi-people"></i> {{ group.member_count_actual }} / {{ group.max_members }} members
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">You haven't joined any groups yet —
+            <a href="{% url 'groups_web:list' %}">browse groups</a>.</p>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-stars"></i> Recommended Buddies</h2>
+        <a href="{% url 'matching_web:find' %}" class="small">See all &rarr;</a>
+    </div>
+    {% if recommended_buddies %}
+        <div class="row g-4 pb-5">
+            {% for match in recommended_buddies %}
+                {% with profile=match.profile %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex gap-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                            {% else %}
+                                <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h3 class="h6 fw-bold mb-0">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{% url 'users_web:member_detail' profile.pk %}">{{ profile.user.username }}</a>
+                                </h3>
+                                <span class="badge text-bg-light">
+                                    <i class="bi bi-lightning-charge-fill text-warning"></i> {{ match.compatibility_score }}% match
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted pb-5">No recommendations yet —
+            <a href="{% url 'users_web:profile_edit' %}">fill out your fitness profile</a> to get matched.</p>
+    {% endif %}
+</div>
+{% endblock %}

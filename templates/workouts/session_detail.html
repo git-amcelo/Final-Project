@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}{{ session.title }} — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card gb-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge bg-intensity-{{ session.intensity|default:'moderate' }}">
+                                {{ session.get_intensity_display|default:'Moderate' }}
+                            </span>
+                            <span class="badge text-bg-light">{{ session.get_session_type_display }}</span>
+                            {% if session.is_past %}
+                                <span class="badge text-bg-secondary">Past</span>
+                            {% else %}
+                                <span class="badge text-bg-success">{{ session.get_status_display }}</span>
+                            {% endif %}
+                        </div>
+                        {% if is_creator %}
+                            <div class="btn-group">
+                                <a href="{% url 'workouts_web:edit' session.pk %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a href="{% url 'workouts_web:delete' session.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        {% elif is_participant %}
+                            <form method="post" action="{% url 'workouts_web:leave' session.pk %}"
+                                  onsubmit="return confirm('Leave this session?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-box-arrow-left"></i> Leave Session
+                                </button>
+                            </form>
+                        {% elif user_join_request %}
+                            <span class="badge text-bg-light"><i class="bi bi-hourglass-split"></i> Request pending</span>
+                        {% elif can_request_join %}
+                            <form method="post" action="{% url 'workouts_web:request_join' session.pk %}" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <input type="text" name="message" class="form-control form-control-sm"
+                                       placeholder="Optional message to the creator" style="min-width:16rem;">
+                                <button type="submit" class="btn btn-sm btn-warning text-nowrap">
+                                    <i class="bi bi-person-plus"></i> Request to Join
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="h3 fw-bold mt-3">{{ session.title }}</h1>
+                    <p class="{% if not session.description %}text-muted{% endif %}">
+                        {{ session.description|default:"No description provided." }}
+                    </p>
+
+                    <div class="row small text-muted mt-3 g-2">
+                        <div class="col-md-6"><i class="bi bi-clock"></i>
+                            {{ session.scheduled_datetime|date:"l, M j, Y · g:i A" }}</div>
+                        <div class="col-md-6"><i class="bi bi-hourglass-split"></i>
+                            {{ session.duration_minutes }} minutes</div>
+                        <div class="col-md-6"><i class="bi bi-geo-alt"></i> {{ session.location }}</div>
+                        <div class="col-md-6"><i class="bi bi-people"></i>
+                            {{ session.current_participants }} / {{ session.max_participants }} participants</div>
+                        <div class="col-md-6"><i class="bi bi-person"></i>
+                            Created by {{ session.creator.username }}</div>
+                        {% if session.participant %}
+                            <div class="col-md-6"><i class="bi bi-person-check"></i>
+                                With {{ session.participant.username }}</div>
+                        {% endif %}
+                    </div>
+
+                    {% if session.notes and user.is_authenticated %}
+                        <h2 class="h6 fw-bold mt-4">Notes for participants</h2>
+                        <p class="small mb-0">{{ session.notes }}</p>
+                    {% endif %}
+
+                    {% if ratable_participants %}
+                        <h2 class="h6 fw-bold mt-4">Rate your workout partner</h2>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for partner in ratable_participants %}
+                                <a href="{% url 'ratings_web:rate' partner.pk %}?session={{ session.pk }}"
+                                   class="btn btn-sm btn-warning">
+                                    <i class="bi bi-star"></i> Rate {{ partner.username }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if not user.is_authenticated %}
+                        <div class="alert alert-warning mt-4 mb-0">
+                            <i class="bi bi-lock"></i>
+                            <a href="{% url 'login' %}?next={{ request.path }}">Login</a> or
+                            <a href="{% url 'users_web:signup' %}">sign up</a> to contact the creator and join sessions.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if pending_requests %}
+                <div class="card gb-card mt-4">
+                    <div class="card-body p-4">
+                        <h2 class="h6 fw-bold"><i class="bi bi-inbox"></i> Join Requests</h2>
+                        <div class="d-flex flex-column gap-3 mt-2">
+                        {% for req in pending_requests %}
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    {% if req.requester.profile %}
+                                        <a href="{% url 'users_web:member_detail' req.requester.profile.pk %}"
+                                           class="fw-semibold text-decoration-none text-dark">{{ req.requester.username }}</a>
+                                    {% else %}
+                                        <span class="fw-semibold">{{ req.requester.username }}</span>
+                                    {% endif %}
+                                    {% if req.message %}
+                                        <div class="small text-muted fst-italic">&ldquo;{{ req.message }}&rdquo;</div>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <form method="post" action="{% url 'workouts_web:accept' session.pk req.requester.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-dark">Accept</button>
+                                    </form>
+                                    <form method="post" action="{% url 'workouts_web:reject' session.pk req.requester.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <a href="{% url 'workouts_web:list' %}" class="btn btn-link mt-3">&larr; All sessions</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

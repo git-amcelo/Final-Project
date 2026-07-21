@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}My Reviews — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="h3 fw-bold mb-4"><i class="bi bi-star"></i> My reviews</h1>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card gb-card h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold"><i class="bi bi-inbox"></i> Received ({{ received|length }})</h2>
+                    {% if received %}
+                        <ul class="list-group list-group-flush">
+                            {% for rating in received %}
+                                <li class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ rating.from_user.username }}</strong>
+                                        <span class="text-warning">
+                                            {% for _ in "12345"|make_list|slice:rating.score %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                        </span>
+                                    </div>
+                                    {% if rating.comment %}<div class="small">{{ rating.comment }}</div>{% endif %}
+                                    <div class="small text-muted">{{ rating.created_at|date:"M j, Y" }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small mb-0">No reviews received yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card gb-card h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold"><i class="bi bi-send"></i> Given ({{ given|length }})</h2>
+                    {% if given %}
+                        <ul class="list-group list-group-flush">
+                            {% for rating in given %}
+                                <li class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ rating.to_user.username }}</strong>
+                                        <span class="text-warning">
+                                            {% for _ in "12345"|make_list|slice:rating.score %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                        </span>
+                                    </div>
+                                    {% if rating.comment %}<div class="small">{{ rating.comment }}</div>{% endif %}
+                                    <div class="small text-muted">
+                                        {{ rating.created_at|date:"M j, Y" }} ·
+                                        <a href="{% url 'ratings_web:rate' rating.to_user.pk %}{% if rating.session %}?session={{ rating.session.pk }}{% endif %}">edit</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small mb-0">You haven't reviewed anyone yet.
+                            <a href="{% url 'users_web:members' %}">Find a buddy</a> to get started.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

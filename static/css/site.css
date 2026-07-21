@@ -1,0 +1,403 @@
+/* GymBuddy template-site theme — re-themed to match the Next.js frontend:
+   monospace type, black borders/pills, red accent, cream page headers. */
+
+:root {
+    --gb-black: #14161c;
+    --gb-red: #dc2626;
+    --gb-red-dark: #b91c1c;
+    --gb-cream: #f4efe4;
+    --gb-cream-2: #ece4d3;
+    --gb-accent: var(--gb-red);      /* legacy alias used by a couple of templates */
+    --gb-accent-2: var(--gb-red-dark);
+    --gb-dark: var(--gb-black);      /* legacy alias */
+    --gb-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+               'Liberation Mono', monospace;
+}
+
+body {
+    background-color: #fbfaf7;
+    font-family: var(--gb-mono);
+    color: var(--gb-black);
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand, .btn, .badge, .form-label {
+    font-family: var(--gb-mono);
+}
+
+a {
+    color: var(--gb-red);
+}
+
+/* ---------- Top strip + navbar ---------- */
+.gb-topbar {
+    height: 4px;
+    background: linear-gradient(90deg, #000 0%, #2b2b2b 50%, #000 100%);
+}
+
+.gb-navbar {
+    background: #fffdf9;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.06);
+}
+
+.gb-navbar .navbar-brand {
+    color: var(--gb-black);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.gb-nav-link {
+    color: #55606e;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    margin: 0 0.15rem;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.gb-nav-link:hover {
+    color: var(--gb-black);
+}
+
+.gb-nav-link.active {
+    background: var(--gb-red);
+    color: #fff;
+}
+
+.gb-user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.1);
+    padding: 0.2rem 1rem 0.2rem 0.2rem;
+    font-weight: 700;
+    color: var(--gb-black);
+    text-decoration: none;
+}
+
+.gb-user-pill:hover {
+    color: var(--gb-black);
+    background: #f6f6f4;
+}
+
+/* ---------- Buttons (red pill, matches Next.js primary action) ---------- */
+.btn {
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.btn-warning,
+.btn-gb-primary {
+    background: var(--gb-red);
+    border-color: var(--gb-red);
+    color: #fff;
+}
+
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active,
+.btn-gb-primary:hover, .btn-gb-primary:focus {
+    background: var(--gb-red-dark) !important;
+    border-color: var(--gb-red-dark) !important;
+    color: #fff !important;
+}
+
+.btn-outline-dark, .btn-outline-secondary {
+    border: none;
+    background: #eeece5;
+    color: var(--gb-black);
+}
+
+.btn-outline-dark:hover, .btn-outline-secondary:hover {
+    background: var(--gb-black);
+    color: #fff;
+}
+
+.btn-outline-light {
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.btn-outline-light:hover, .btn-outline-light:focus {
+    background: #fff;
+    color: var(--gb-black) !important;
+}
+
+.btn-outline-danger {
+    border: none;
+    background: #fbdada;
+    color: #a3231f;
+}
+
+.btn-outline-danger:hover, .btn-outline-danger:focus {
+    background: #a3231f;
+    color: #fff !important;
+}
+
+/* ---------- Page header band (e.g. "Workouts" hero bar) ---------- */
+.gb-page-header {
+    background: var(--gb-cream);
+    padding: 2.5rem 0;
+}
+
+.gb-page-header h1 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.gb-page-header p {
+    color: #5b5548;
+    margin-bottom: 0;
+}
+
+/* ---------- Filter / search bar ---------- */
+.gb-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.gb-filter-bar .form-select,
+.gb-filter-bar .form-control {
+    border-radius: 999px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.08);
+    font-family: var(--gb-mono);
+    width: auto;
+}
+
+.gb-filter-bar .form-select {
+    flex: 0 1 auto;
+    min-width: 8rem;
+}
+
+.gb-filter-bar input.form-control {
+    flex: 1 1 12rem;
+}
+
+.gb-filter-pill {
+    border: none;
+    border-radius: 999px;
+    padding: 0.45rem 1.1rem;
+    font-weight: 700;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.08);
+    color: var(--gb-black);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.gb-filter-pill.active {
+    background: var(--gb-red);
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
+    color: #fff;
+}
+
+.gb-filter-pill:hover {
+    color: var(--gb-black);
+    background: #f2f2ef;
+}
+
+.gb-filter-pill.active:hover {
+    color: #fff;
+    background: var(--gb-red-dark);
+}
+
+.gb-search .form-select {
+    max-width: 9.5rem;
+}
+
+/* ---------- Hero (home page) ---------- */
+.gb-hero {
+    background: var(--gb-black);
+    color: #fff;
+    padding: 5rem 0;
+}
+
+.gb-hero .display-4 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.gb-hero .text-accent {
+    color: var(--gb-red);
+}
+
+/* ---------- Stat cards ---------- */
+.gb-stat {
+    border: none;
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.06);
+}
+
+.gb-stat .display-6 {
+    font-weight: 800;
+    color: var(--gb-red);
+}
+
+/* ---------- Generic cards ---------- */
+.card.gb-card {
+    border: none;
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.06);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.card.gb-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(20, 22, 28, 0.1);
+}
+
+/* ---------- Badges (pill shape, matches "pending"/status tags) ---------- */
+.badge {
+    border-radius: 999px;
+    font-weight: 700;
+    padding: 0.4em 0.85em;
+}
+
+.text-bg-warning, .bg-warning {
+    background-color: #fdf0cf !important;
+    color: #92640a !important;
+}
+
+.text-bg-light {
+    background-color: #f1f0ec !important;
+    color: var(--gb-black) !important;
+}
+
+.badge.bg-intensity-low { background-color: #d9f2df; color: #1e6b34; }
+.badge.bg-intensity-moderate { background-color: #fdf0cf; color: #92640a; }
+.badge.bg-intensity-high { background-color: #fbdada; color: #a3231f; }
+
+/* ---------- Footer ---------- */
+.gb-footer {
+    background: var(--gb-black);
+    color: #c7c9d1;
+}
+
+.gb-footer a {
+    color: #c7c9d1;
+    text-decoration: none;
+}
+
+.gb-footer a:hover {
+    color: var(--gb-red);
+}
+
+.gb-footer h6, .gb-footer h5 {
+    color: #fff;
+}
+
+.gb-footer .text-warning {
+    color: var(--gb-red) !important;
+}
+
+/* ---------- Forms ---------- */
+.form-control, .form-select {
+    font-family: var(--gb-mono);
+    background-color: #f6f5f0;
+    border: none;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.15);
+}
+
+.gb-auth-card {
+    max-width: 28rem;
+    margin: 3rem auto;
+}
+
+.gb-form-card {
+    max-width: 44rem;
+    margin: 2rem auto;
+}
+
+/* ---------- Profile avatar ---------- */
+.gb-avatar {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--gb-red);
+}
+
+.gb-avatar-sm {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1.5px rgba(20, 22, 28, 0.15);
+}
+
+/* ---------- Alerts (empty states, flash messages) ---------- */
+.alert {
+    border: none;
+    box-shadow: 0 1px 3px rgba(20, 22, 28, 0.05);
+}
+
+/* ---------- Page transition loader ---------- */
+#gb-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 2000;
+    background: linear-gradient(90deg, var(--gb-red) 0%, #ff7a63 100%);
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.7), 0 0 3px rgba(220, 38, 38, 0.9);
+    transform: scaleX(0);
+    transform-origin: left center;
+    opacity: 0;
+    transition: transform 0.4s ease-out, opacity 0.2s ease-in;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+#gb-loader.is-loading {
+    opacity: 1;
+    transition: transform 4s cubic-bezier(0.1, 0.6, 0.2, 1), opacity 0.15s ease-in;
+}
+
+#gb-loader.is-done {
+    opacity: 1;
+    transform: scaleX(1);
+    transition: transform 0.25s ease-out, opacity 0.4s ease-in 0.15s;
+}
+
+/* ---------- Page content entrance ---------- */
+@keyframes gb-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gb-page-enter {
+    animation: gb-slide-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #gb-loader {
+        transition: opacity 0.15s linear;
+    }
+
+    #gb-loader.is-loading,
+    #gb-loader.is-done {
+        transition: opacity 0.15s linear;
+    }
+
+    .gb-page-enter {
+        animation: none;
+    }
+}

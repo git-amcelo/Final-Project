@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}About Us — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <h1 class="fw-bold mb-3">About GymBuddy</h1>
+            <p class="lead">
+                GymBuddy was built by Master of Applied Computing students at the
+                University of Windsor for COMP-8347 (Internet Applications and
+                Distributed Systems).
+            </p>
+            <p>
+                Finding a consistent workout partner is hard — schedules clash, fitness
+                levels differ, and motivation fades when you train alone. GymBuddy solves
+                this by matching students and alumni based on their fitness level,
+                goals and availability, and by helping micro-communities form around
+                shared workout interests.
+            </p>
+
+            <h2 class="h4 fw-bold mt-4">What you can do</h2>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <div class="card gb-card h-100 p-3">
+                        <h3 class="h6 fw-bold"><i class="bi bi-people text-warning"></i> Find buddies</h3>
+                        <p class="small text-muted mb-0">Search members by fitness level and interests, and connect with compatible partners.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card gb-card h-100 p-3">
+                        <h3 class="h6 fw-bold"><i class="bi bi-calendar-event text-warning"></i> Book sessions</h3>
+                        <p class="small text-muted mb-0">Create one-on-one or group workout sessions and manage who joins.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card gb-card h-100 p-3">
+                        <h3 class="h6 fw-bold"><i class="bi bi-people-fill text-warning"></i> Join groups</h3>
+                        <p class="small text-muted mb-0">Open, closed and private fitness groups that meet on a regular schedule.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card gb-card h-100 p-3">
+                        <h3 class="h6 fw-bold"><i class="bi bi-star text-warning"></i> Rate partners</h3>
+                        <p class="small text-muted mb-0">Build trust with ratings for punctuality, communication and effort.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="h4 fw-bold mt-4">The team</h2>
+            <p class="text-muted">
+                Built with Python, Django and Bootstrap by a five-member project group.
+                Get in touch through the <a href="{% url 'web:contact' %}">contact page</a>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

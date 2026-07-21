@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GymBuddy — Find Your Workout Partner{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<div id="gb-loader"></div>
+<div class="gb-topbar"></div>
+<nav class="navbar navbar-expand-lg gb-navbar sticky-top py-3">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'web:home' %}">
+            <i class="bi bi-lightning-charge-fill text-warning"></i> GymBuddy
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
+                <li class="nav-item">
+                    <a class="gb-nav-link {% if request.path == '/' %}active{% endif %}"
+                       href="{% url 'web:home' %}">Home</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="gb-nav-link {% if '/members' in request.path %}active{% endif %}"
+                           href="{% url 'users_web:members' %}">Find Buddies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="gb-nav-link {% if '/matching' in request.path %}active{% endif %}"
+                           href="{% url 'matching_web:find' %}">Matching</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="gb-nav-link {% if '/sessions' in request.path %}active{% endif %}"
+                       href="{% url 'workouts_web:list' %}">Workouts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="gb-nav-link {% if '/community' in request.path %}active{% endif %}"
+                       href="{% url 'groups_web:list' %}">Groups</a>
+                </li>
+                <li class="nav-item">
+                    <a class="gb-nav-link {% if '/about' in request.path %}active{% endif %}"
+                       href="{% url 'web:about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="gb-nav-link {% if '/contact' in request.path %}active{% endif %}"
+                       href="{% url 'web:contact' %}">Contact</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-lg-3">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="gb-user-pill dropdown-toggle" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.profile.profile_picture %}
+                                <img src="{{ user.profile.profile_picture.url }}" alt=""
+                                     class="rounded-circle" style="width:26px;height:26px;object-fit:cover;">
+                            {% else %}
+                                <i class="bi bi-person-circle"></i>
+                            {% endif %}
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'web:dashboard' %}">
+                                <i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users_web:profile' %}">
+                                <i class="bi bi-person"></i> My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users_web:history' %}">
+                                <i class="bi bi-clock-history"></i> My History</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ratings_web:mine' %}">
+                                <i class="bi bi-star"></i> My Reviews</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users_web:favorites' %}">
+                                <i class="bi bi-heart"></i> Favorites</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users_web:blocked' %}">
+                                <i class="bi bi-slash-circle"></i> Blocked Users</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="px-3">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-dark w-100">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="gb-nav-link" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-warning ms-lg-2" href="{% url 'users_web:signup' %}">Join Free</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow-1 gb-page-enter">
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="gb-footer mt-5 pt-5 pb-3">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <h5 class="text-warning fw-bold"><i class="bi bi-lightning-charge-fill"></i> GymBuddy</h5>
+                <p class="small mb-0">
+                    Connecting University of Windsor students and alumni with workout partners,
+                    fitness groups, and training sessions. Never work out alone again.
+                </p>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="fw-bold">Explore</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="{% url 'workouts_web:list' %}">Workout Sessions</a></li>
+                    <li><a href="{% url 'groups_web:list' %}">Fitness Groups</a></li>
+                    <li><a href="{% url 'users_web:members' %}">Find Buddies</a></li>
+                    <li><a href="{% url 'web:about' %}">About Us</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="fw-bold">Account</h6>
+                <ul class="list-unstyled small">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'users_web:profile' %}">My Profile</a></li>
+                        <li><a href="{% url 'users_web:history' %}">My History</a></li>
+                        <li><a href="{% url 'ratings_web:mine' %}">My Reviews</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users_web:signup' %}">Sign Up</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'password_reset' %}">Forgot Password</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="fw-bold">Contact</h6>
+                <ul class="list-unstyled small">
+                    <li><i class="bi bi-chat-dots"></i> <a href="{% url 'web:contact' %}">Contact us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between small mt-4">
+            <span>&copy; 2026 GymBuddy — COMP-8347 Project, University of Windsor</span>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/site.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

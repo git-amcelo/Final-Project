@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}My Profile — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card gb-card">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile picture" class="gb-avatar">
+                        {% else %}
+                            <div class="gb-avatar d-flex align-items-center justify-content-center bg-light">
+                                <i class="bi bi-person fs-1 text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="text-center text-md-start">
+                            <h1 class="h3 fw-bold mb-0">{{ user.get_full_name|default:user.username }}</h1>
+                            <p class="text-muted mb-1">@{{ user.username }} · {{ user.get_role_display }}</p>
+                            <span class="badge text-bg-warning">{{ profile.get_fitness_level_display }}</span>
+                            {% if profile.average_rating %}
+                                <span class="badge text-bg-light">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    {{ profile.average_rating }} ({{ profile.total_ratings }})
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="ms-md-auto">
+                            <a href="{% url 'users_web:profile_edit' %}" class="btn btn-outline-dark">
+                                <i class="bi bi-pencil"></i> Edit profile
+                            </a>
+                        </div>
+                    </div>
+
+                    <h2 class="h6 fw-bold mt-4">Bio</h2>
+                    <p class="{% if not profile.bio %}text-muted{% endif %}">
+                        {{ profile.bio|default:"No bio yet — tell others about your fitness journey!" }}
+                    </p>
+
+                    <div class="row small text-muted">
+                        <div class="col-md-6"><i class="bi bi-envelope"></i> {{ user.email }}</div>
+                        {% if user.phone %}<div class="col-md-6"><i class="bi bi-telephone"></i> {{ user.phone }}</div>{% endif %}
+                        <div class="col-md-6 mt-1"><i class="bi bi-calendar"></i> Joined {{ profile.joined_date|date:"M Y" }}</div>
+                        <div class="col-md-6 mt-1">
+                            <i class="bi bi-eye"></i>
+                            {% if profile.is_visible %}Visible in buddy search{% else %}Hidden from buddy search{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

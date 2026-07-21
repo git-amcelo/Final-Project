@@ -1,0 +1,48 @@
+[
+{
+  "model": "ratings.rating",
+  "pk": 1,
+  "fields": {
+    "from_user": [
+      "chetansmac"
+    ],
+    "to_user": [
+      "deepak"
+    ],
+    "session": 3,
+    "group": null,
+    "score": 5,
+    "punctuality": null,
+    "communication": null,
+    "effort": null,
+    "knowledge": null,
+    "comment": "Great",
+    "would_workout_again": true,
+    "created_at": "2026-07-13T20:54:17.860Z",
+    "updated_at": "2026-07-13T20:54:17.860Z"
+  }
+},
+{
+  "model": "ratings.rating",
+  "pk": 2,
+  "fields": {
+    "from_user": [
+      "deepak"
+    ],
+    "to_user": [
+      "chetansmac"
+    ],
+    "session": 3,
+    "group": null,
+    "score": 5,
+    "punctuality": null,
+    "communication": null,
+    "effort": null,
+    "knowledge": null,
+    "comment": "great",
+    "would_workout_again": true,
+    "created_at": "2026-07-13T21:03:09.657Z",
+    "updated_at": "2026-07-13T21:03:09.657Z"
+  }
+}
+]

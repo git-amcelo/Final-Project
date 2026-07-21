@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Session{% else %}New Session{% endif %} — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card gb-card gb-form-card">
+        <div class="card-body p-4">
+            <h1 class="h3 fw-bold mb-4">
+                {% if form.instance.pk %}
+                    <i class="bi bi-pencil-square"></i> Edit "{{ form.instance.title }}"
+                {% else %}
+                    <i class="bi bi-plus-circle"></i> Create a workout session
+                {% endif %}
+            </h1>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include 'includes/field.html' with field=form.title %}
+                {% include 'includes/field.html' with field=form.description %}
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.session_type %}</div>
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.intensity %}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.scheduled_datetime %}</div>
+                    <div class="col-md-3">{% include 'includes/field.html' with field=form.duration_minutes %}</div>
+                    <div class="col-md-3">{% include 'includes/field.html' with field=form.max_participants %}</div>
+                </div>
+                {% include 'includes/field.html' with field=form.location %}
+                {% include 'includes/field.html' with field=form.notes %}
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-warning fw-semibold">
+                        <i class="bi bi-check-lg"></i> {% if form.instance.pk %}Save changes{% else %}Create session{% endif %}
+                    </button>
+                    <a href="{% url 'workouts_web:list' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

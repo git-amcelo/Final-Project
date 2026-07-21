@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}GymBuddy — Find Your Workout Partner{% endblock %}
+
+{% block content %}
+<section class="gb-hero text-center">
+    <div class="container">
+        <h1 class="display-4">Never work out <span class="text-accent">alone</span> again</h1>
+        <p class="lead mb-4 mx-auto" style="max-width: 40rem;">
+            GymBuddy connects University of Windsor students and alumni with workout
+            partners, fitness groups and training sessions that match their goals.
+        </p>
+        {% if user.is_authenticated %}
+            <a class="btn btn-warning btn-lg fw-semibold me-2" href="{% url 'users_web:members' %}">
+                <i class="bi bi-people"></i> Find a Buddy
+            </a>
+            <a class="btn btn-outline-light btn-lg" href="{% url 'workouts_web:create' %}">
+                <i class="bi bi-plus-circle"></i> Create a Session
+            </a>
+        {% else %}
+            <a class="btn btn-warning btn-lg fw-semibold me-2" href="{% url 'users_web:signup' %}">
+                <i class="bi bi-person-plus"></i> Join Free
+            </a>
+            <a class="btn btn-outline-light btn-lg" href="{% url 'workouts_web:list' %}">
+                <i class="bi bi-search"></i> Browse Sessions
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ stats.members }}</div>
+                <div class="text-muted">Registered members</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ stats.sessions }}</div>
+                <div class="text-muted">Workout sessions</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card gb-stat p-4">
+                <div class="display-6">{{ stats.groups }}</div>
+                <div class="text-muted">Fitness groups</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-calendar-event"></i> Upcoming sessions</h2>
+        <a href="{% url 'workouts_web:list' %}" class="small">See all &rarr;</a>
+    </div>
+    {% if upcoming_sessions %}
+        <div class="row g-4">
+            {% for session in upcoming_sessions %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge bg-intensity-{{ session.intensity|default:'moderate' }}">
+                                    {{ session.get_intensity_display|default:'Moderate' }}
+                                </span>
+                                <span class="badge text-bg-light">{{ session.get_session_type_display }}</span>
+                            </div>
+                            <h3 class="h6 fw-bold mt-2 mb-1">
+                                <a class="text-decoration-none text-dark"
+                                   href="{% url 'workouts_web:detail' session.pk %}">{{ session.title }}</a>
+                            </h3>
+                            <p class="small text-muted mb-2">
+                                <i class="bi bi-geo-alt"></i> {{ session.location }}<br>
+                                <i class="bi bi-clock"></i> {{ session.scheduled_datetime|date:"D, M j · g:i A" }}
+                            </p>
+                            <span class="small">by {{ session.creator.username }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No upcoming sessions yet — be the first to
+            <a href="{% url 'workouts_web:create' %}">create one</a>!</p>
+    {% endif %}
+</section>
+
+{% if not user.is_authenticated %}
+    <section class="container my-5">
+        <div class="card gb-card p-4 text-center">
+            <h2 class="h5 fw-bold">Members get more <i class="bi bi-stars text-warning"></i></h2>
+            <p class="text-muted mb-3 mx-auto" style="max-width: 36rem;">
+                Guests can browse sessions and groups. Registered members can also find
+                buddies, join groups, book sessions, upload a profile picture and rate partners.
+            </p>
+            <div>
+                <a class="btn btn-warning fw-semibold" href="{% url 'users_web:signup' %}">Create your free account</a>
+            </div>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

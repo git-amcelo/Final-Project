@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}My Favorites — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="My Favorites" subtitle="Buddies you've marked for quick access" %}
+
+<div class="container">
+    {% if favorites %}
+        <div class="row g-4 pb-5">
+            {% for favorite in favorites %}
+                {% with target=favorite.favorite profile=favorite.favorite.profile %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex gap-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                            {% else %}
+                                <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h2 class="h6 fw-bold mb-0">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{% url 'users_web:member_detail' profile.pk %}">
+                                        {{ target.get_full_name|default:target.username }}
+                                    </a>
+                                </h2>
+                                <div class="small text-muted">@{{ target.username }}</div>
+                                <span class="badge text-bg-warning mt-1">{{ profile.get_fitness_level_display }}</span>
+                            </div>
+                            <form method="post" action="{% url 'users_web:unfavorite' target.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'users_web:favorites' %}">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Remove">
+                                    <i class="bi bi-heart-fill text-danger"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> You haven't favorited any buddies yet.
+            <a href="{% url 'users_web:members' %}">Browse the buddy directory</a> to find one.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

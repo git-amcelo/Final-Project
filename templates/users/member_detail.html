@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile.user.username }} — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card gb-card">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile picture" class="gb-avatar">
+                        {% else %}
+                            <div class="gb-avatar d-flex align-items-center justify-content-center bg-light">
+                                <i class="bi bi-person fs-1 text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="text-center text-md-start">
+                            <h1 class="h3 fw-bold mb-0">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
+                            <p class="text-muted mb-1">@{{ profile.user.username }} · {{ profile.user.get_role_display }}</p>
+                            <span class="badge text-bg-warning">{{ profile.get_fitness_level_display }}</span>
+                            {% if profile.average_rating %}
+                                <span class="badge text-bg-light">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    {{ profile.average_rating }} ({{ profile.total_ratings }} reviews)
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="ms-md-auto d-flex flex-wrap gap-2">
+                            {% if is_favorited %}
+                                <form method="post" action="{% url 'users_web:unfavorite' profile.user.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-secondary fw-semibold">
+                                        <i class="bi bi-heart-fill text-danger"></i> Favorited
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'users_web:favorite' profile.user.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-secondary fw-semibold">
+                                        <i class="bi bi-heart"></i> Favorite
+                                    </button>
+                                </form>
+                            {% endif %}
+                            {% if is_blocked %}
+                                <form method="post" action="{% url 'users_web:unblock' profile.user.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger fw-semibold">
+                                        <i class="bi bi-slash-circle"></i> Unblock
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'users_web:block' profile.user.pk %}"
+                                      onsubmit="return confirm('Block {{ profile.user.username }}? You will no longer see them in search, matching, or listings.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger fw-semibold">
+                                        <i class="bi bi-slash-circle"></i> Block
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h2 class="h6 fw-bold mt-4">Bio</h2>
+                    <p class="{% if not profile.bio %}text-muted{% endif %}">
+                        {{ profile.bio|default:"This member hasn't written a bio yet." }}
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-calendar"></i> Member since {{ profile.joined_date|date:"M Y" }}
+                    </p>
+                </div>
+            </div>
+            <a href="{% url 'users_web:members' %}" class="btn btn-link mt-3">&larr; Back to buddy search</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

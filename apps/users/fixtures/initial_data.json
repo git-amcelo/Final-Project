@@ -1,0 +1,425 @@
+[
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$v486R3xefwwfOUEcuv7wYU$Wti3KML/GWKJxxW8NlelOTzJSWj6BAgtoO/8SiktFrU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "chetansmac",
+    "email": "tchetan308@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-11T19:18:42.575Z",
+    "first_name": "",
+    "last_name": "",
+    "role": "student",
+    "student_id": null,
+    "phone": "",
+    "email_verified": false,
+    "created_at": "2026-07-11T19:18:42.575Z",
+    "updated_at": "2026-07-13T21:36:40.145Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$tkWs9B3NDz2CGuFYczSgY8$ch0GwjN8UenhCyW8wxQJqrlvr2vKtUbthKqspQsGk+c=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "testuser",
+    "email": "test@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-11T19:19:00.228Z",
+    "first_name": "",
+    "last_name": "",
+    "role": "student",
+    "student_id": null,
+    "phone": "",
+    "email_verified": false,
+    "created_at": "2026-07-11T19:19:00.228Z",
+    "updated_at": "2026-07-11T19:19:00.392Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$vorHw11btBnqqd2JwgJqp0$ML/gTNc+LU7p/02s3pm20nTL3eGUX7URMSvaNKUgSKI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "testuser123",
+    "email": "testuser123@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-11T19:45:53.919Z",
+    "first_name": "",
+    "last_name": "",
+    "role": "student",
+    "student_id": null,
+    "phone": "",
+    "email_verified": false,
+    "created_at": "2026-07-11T19:45:53.919Z",
+    "updated_at": "2026-07-11T19:45:54.081Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$rppEUiifwsBfbx9TaInLbx$9A5pTGy5qPshSH8YbPMmN0KWvJtzR81p25LTRrLnYu8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "newuser123",
+    "email": "newuser@test.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-13T18:39:06.963Z",
+    "first_name": "",
+    "last_name": "",
+    "role": "student",
+    "student_id": null,
+    "phone": "",
+    "email_verified": false,
+    "created_at": "2026-07-13T18:39:06.963Z",
+    "updated_at": "2026-07-13T18:39:07.122Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$aZdu1UVdcnPEzlDuRrSVkn$UTa56/Jw10sdaaMjp0WmFVC+7I/3CkUKBEBm7a7Pai8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "deepak",
+    "email": "deepak@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-13T18:40:56.702Z",
+    "first_name": "",
+    "last_name": "",
+    "role": "student",
+    "student_id": null,
+    "phone": "",
+    "email_verified": false,
+    "created_at": "2026-07-13T18:40:56.702Z",
+    "updated_at": "2026-07-13T18:40:56.887Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "chetansmac"
+    ],
+    "bio": "Fitness enthusiast looking for workout partners",
+    "profile_picture": "profiles/ME.jpg",
+    "gender": "M",
+    "fitness_level": "intermediate",
+    "fitness_goals": [
+      "strength",
+      "muscle_gain"
+    ],
+    "preferred_genders": [],
+    "availability": {
+      "monday": [
+        "morning",
+        "evening"
+      ],
+      "tuesday": [
+        "evening"
+      ],
+      "wednesday": [
+        "afternoon"
+      ],
+      "thursday": [
+        "morning"
+      ],
+      "friday": [
+        "evening"
+      ]
+    },
+    "gym_preferences": [
+      "Main Campus Gym",
+      "Recreation Center"
+    ],
+    "interests": [
+      "weightlifting",
+      "cardio",
+      "crossfit"
+    ],
+    "certifications": [],
+    "average_rating": 5.0,
+    "total_ratings": 1,
+    "joined_date": "2026-07-13T18:57:28.824Z",
+    "last_active": "2026-07-13T21:36:40.148Z",
+    "is_visible": true
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "testuser"
+    ],
+    "bio": "Love cardio and HIIT workouts",
+    "profile_picture": "",
+    "gender": null,
+    "fitness_level": "advanced",
+    "fitness_goals": [
+      "cardio",
+      "endurance"
+    ],
+    "preferred_genders": [],
+    "availability": {
+      "monday": [
+        "morning"
+      ],
+      "tuesday": [
+        "afternoon"
+      ],
+      "wednesday": [
+        "evening"
+      ],
+      "thursday": [
+        "morning"
+      ],
+      "friday": [
+        "afternoon"
+      ],
+      "saturday": [
+        "morning"
+      ]
+    },
+    "gym_preferences": [
+      "Main Campus Gym"
+    ],
+    "interests": [
+      "running",
+      "cycling",
+      "hiit"
+    ],
+    "certifications": [],
+    "average_rating": 0.0,
+    "total_ratings": 0,
+    "joined_date": "2026-07-13T18:57:28.825Z",
+    "last_active": "2026-07-13T19:03:12.021Z",
+    "is_visible": true
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "testuser123"
+    ],
+    "bio": "Beginner looking to learn and improve",
+    "profile_picture": "",
+    "gender": null,
+    "fitness_level": "beginner",
+    "fitness_goals": [
+      "weight_loss",
+      "flexibility"
+    ],
+    "preferred_genders": [],
+    "availability": {
+      "monday": [
+        "evening"
+      ],
+      "tuesday": [
+        "evening"
+      ],
+      "wednesday": [
+        "morning"
+      ],
+      "thursday": [
+        "evening"
+      ],
+      "friday": [
+        "morning"
+      ]
+    },
+    "gym_preferences": [
+      "Fitness Studio"
+    ],
+    "interests": [
+      "yoga",
+      "pilates",
+      "cardio"
+    ],
+    "certifications": [],
+    "average_rating": 0.0,
+    "total_ratings": 0,
+    "joined_date": "2026-07-13T18:57:28.826Z",
+    "last_active": "2026-07-13T19:03:12.022Z",
+    "is_visible": true
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "newuser123"
+    ],
+    "bio": "Strength training focused",
+    "profile_picture": "",
+    "gender": null,
+    "fitness_level": "intermediate",
+    "fitness_goals": [
+      "strength",
+      "muscle_gain"
+    ],
+    "preferred_genders": [],
+    "availability": {
+      "monday": [
+        "afternoon"
+      ],
+      "tuesday": [
+        "afternoon"
+      ],
+      "wednesday": [
+        "afternoon"
+      ],
+      "thursday": [
+        "evening"
+      ],
+      "friday": [
+        "evening"
+      ]
+    },
+    "gym_preferences": [
+      "Main Campus Gym",
+      "Stadium"
+    ],
+    "interests": [
+      "weightlifting",
+      "crossfit"
+    ],
+    "certifications": [],
+    "average_rating": 0.0,
+    "total_ratings": 0,
+    "joined_date": "2026-07-13T18:57:28.826Z",
+    "last_active": "2026-07-13T19:03:12.022Z",
+    "is_visible": true
+  }
+},
+{
+  "model": "users.userprofile",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "deepak"
+    ],
+    "bio": "All-around fitness enthusiast",
+    "profile_picture": "",
+    "gender": null,
+    "fitness_level": "intermediate",
+    "fitness_goals": [
+      "strength",
+      "cardio",
+      "flexibility"
+    ],
+    "preferred_genders": [],
+    "availability": {
+      "monday": [
+        "morning",
+        "evening"
+      ],
+      "tuesday": [
+        "morning",
+        "evening"
+      ],
+      "wednesday": [
+        "afternoon",
+        "evening"
+      ],
+      "thursday": [
+        "morning"
+      ],
+      "friday": [
+        "afternoon"
+      ],
+      "saturday": [
+        "morning"
+      ],
+      "sunday": [
+        "evening"
+      ]
+    },
+    "gym_preferences": [
+      "Recreation Center",
+      "Pool"
+    ],
+    "interests": [
+      "weightlifting",
+      "running",
+      "swimming"
+    ],
+    "certifications": [],
+    "average_rating": 5.0,
+    "total_ratings": 1,
+    "joined_date": "2026-07-13T18:57:28.827Z",
+    "last_active": "2026-07-13T19:03:12.023Z",
+    "is_visible": true
+  }
+},
+{
+  "model": "users.blockeduser",
+  "pk": 2,
+  "fields": {
+    "blocker": [
+      "chetansmac"
+    ],
+    "blocked": [
+      "testuser"
+    ],
+    "created_at": "2026-07-13T20:30:53.167Z",
+    "reason": ""
+  }
+},
+{
+  "model": "users.blockeduser",
+  "pk": 3,
+  "fields": {
+    "blocker": [
+      "chetansmac"
+    ],
+    "blocked": [
+      "deepak"
+    ],
+    "created_at": "2026-07-13T21:05:39.488Z",
+    "reason": ""
+  }
+},
+{
+  "model": "users.favoriteuser",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "chetansmac"
+    ],
+    "favorite": [
+      "deepak"
+    ],
+    "created_at": "2026-07-13T20:30:57.091Z",
+    "notes": ""
+  }
+}
+]

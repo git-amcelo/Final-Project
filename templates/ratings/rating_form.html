@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Rate {{ to_user.username }} — GymBuddy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card gb-card gb-form-card">
+        <div class="card-body p-4">
+            <h1 class="h3 fw-bold mb-1">
+                <i class="bi bi-star"></i>
+                {% if is_update %}Update your review of{% else %}Rate{% endif %} {{ to_user.username }}
+            </h1>
+            {% if session %}
+                <p class="text-muted mb-4">For your workout session &ldquo;{{ session.title }}&rdquo;.</p>
+            {% else %}
+                <p class="text-muted mb-4">Honest reviews keep the GymBuddy community reliable.</p>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% if session %}<input type="hidden" name="session" value="{{ session.pk }}">{% endif %}
+                {% include 'includes/field.html' with field=form.score %}
+                <div class="row">
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.punctuality %}</div>
+                    <div class="col-md-6">{% include 'includes/field.html' with field=form.communication %}</div>
+                </div>
+                {% include 'includes/field.html' with field=form.comment %}
+                {% include 'includes/field.html' with field=form.would_workout_again %}
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-warning fw-semibold">
+                        <i class="bi bi-check-lg"></i> {% if is_update %}Update review{% else %}Submit review{% endif %}
+                    </button>
+                    <a href="{% if session %}{% url 'workouts_web:detail' session.pk %}{% else %}{% url 'users_web:members' %}{% endif %}"
+                       class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

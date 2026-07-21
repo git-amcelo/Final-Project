@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Groups — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="Groups" subtitle="Join a fitness community that trains on your schedule" %}
+{% if user.is_authenticated %}
+    <div class="container d-flex justify-content-end" style="margin-top:-1.25rem;">
+        <a href="{% url 'groups_web:create' %}" class="btn btn-warning">
+            <i class="bi bi-plus-lg"></i> Create Group
+        </a>
+    </div>
+{% endif %}
+
+<div class="container">
+    <div class="gb-filter-bar">
+        <a class="gb-filter-pill {% if not scope %}active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}">All Groups</a>
+        {% if user.is_authenticated %}
+            <a class="gb-filter-pill {% if scope == 'mine' %}active{% endif %}"
+               href="?scope=mine{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">My Groups</a>
+        {% endif %}
+
+        <form method="get" class="d-flex gap-2 ms-lg-auto flex-wrap">
+            <input type="hidden" name="scope" value="{{ scope }}">
+            {{ search_form.q }}
+            {{ search_form.group_type }}
+            <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i> Search</button>
+        </form>
+    </div>
+
+    {% if groups %}
+        <div class="row g-4 pb-5">
+            {% for group in groups %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        {% if group.group_image %}
+                            <img src="{{ group.group_image.url }}" class="card-img-top" alt=""
+                                 style="height: 140px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge text-bg-warning">{{ group.get_group_type_display }}</span>
+                                {% if group.is_featured %}<span class="badge text-bg-light">Featured</span>{% endif %}
+                            </div>
+                            <h2 class="h5 fw-bold mt-2 mb-1">
+                                <a class="text-decoration-none text-dark"
+                                   href="{% url 'groups_web:detail' group.slug %}">{{ group.name }}</a>
+                            </h2>
+                            {% if group.tagline %}<p class="small text-muted mb-2">{{ group.tagline }}</p>{% endif %}
+                            <p class="small mb-3 flex-grow-1">
+                                <i class="bi bi-arrow-repeat"></i> {{ group.get_workout_frequency_display }}<br>
+                                {% if group.primary_location %}<i class="bi bi-geo-alt"></i> {{ group.primary_location }}<br>{% endif %}
+                                <i class="bi bi-people"></i> {{ group.member_count_actual }} / {{ group.max_members }} members
+                            </p>
+                            <a href="{% url 'groups_web:detail' group.slug %}" class="btn btn-warning w-100">
+                                View Group
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> No groups matched your search.
+            {% if user.is_authenticated %}Start your own &mdash; <a href="{% url 'groups_web:create' %}">create a group</a>.{% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

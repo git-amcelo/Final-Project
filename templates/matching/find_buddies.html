@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Buddy Matching — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title="Buddy Matching" subtitle="Scored by fitness level, goals, availability, location and interests" %}
+
+<div class="container">
+    <div class="gb-filter-bar">
+        <form method="get" class="d-flex gap-2 flex-wrap w-100 align-items-center">
+            {{ form.fitness_level }}
+            {{ form.gender }}
+            {{ form.goals }}
+            {{ form.interests }}
+            {{ form.location }}
+            {{ form.min_rating }}
+            <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i> Find Matches</button>
+            {% if has_filters %}<a href="{% url 'matching_web:find' %}" class="btn btn-link">Clear</a>{% endif %}
+        </form>
+    </div>
+
+    {% if matches %}
+        <p class="text-muted">{{ total_found }} compatible match{{ total_found|pluralize:"es" }} found — showing top {{ matches|length }}.</p>
+        <div class="row g-4 pb-5">
+            {% for match in matches %}
+                {% with profile=match.profile %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex gap-3">
+                                {% if profile.profile_picture %}
+                                    <img src="{{ profile.profile_picture.url }}" alt="" class="gb-avatar-sm">
+                                {% else %}
+                                    <div class="gb-avatar-sm d-flex align-items-center justify-content-center bg-light">
+                                        <i class="bi bi-person text-muted"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h2 class="h6 fw-bold mb-0">
+                                        <a class="text-decoration-none text-dark"
+                                           href="{% url 'users_web:member_detail' profile.pk %}">
+                                            {{ profile.user.get_full_name|default:profile.user.username }}
+                                        </a>
+                                    </h2>
+                                    <div class="small text-muted">@{{ profile.user.username }}</div>
+                                    <span class="badge text-bg-warning mt-1">{{ profile.get_fitness_level_display }}</span>
+                                </div>
+                                <span class="badge text-bg-light align-self-start">
+                                    <i class="bi bi-lightning-charge-fill text-warning"></i> {{ match.compatibility_score }}% match
+                                </span>
+                            </div>
+                            {% if match.match_reasons %}
+                                <ul class="small text-muted mt-3 mb-0 ps-3">
+                                    {% for reason in match.match_reasons %}
+                                        <li>{{ reason }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <div class="mt-auto pt-3 d-flex gap-2">
+                                <form method="post" action="{% url 'users_web:favorite' profile.user.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url 'matching_web:find' %}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-heart"></i> Favorite
+                                    </button>
+                                </form>
+                                <a href="{% url 'users_web:member_detail' profile.pk %}" class="btn btn-sm btn-outline-dark">
+                                    View profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% elif has_filters %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> No compatible buddies found with these filters. Try widening your search.
+        </div>
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> No compatible buddies found yet.
+            <a href="{% url 'users_web:profile_edit' %}">Fill out your fitness profile</a> to improve your matches.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} — Sessions — GymBuddy{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' with title=group.name|add:" — Sessions" subtitle="Scheduled workouts for this group" %}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'groups_web:detail' group.slug %}" class="btn btn-link px-0">&larr; Back to {{ group.name }}</a>
+        {% if can_manage %}
+            <a href="{% url 'groups_web:session_create' group.slug %}" class="btn btn-warning">
+                <i class="bi bi-plus-lg"></i> Schedule a session
+            </a>
+        {% endif %}
+    </div>
+
+    {% if sessions %}
+        <div class="row g-4 pb-5">
+            {% for session in sessions %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card gb-card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h2 class="h6 fw-bold mb-1">{{ session.title }}</h2>
+                            <p class="small text-muted mb-2">
+                                <i class="bi bi-calendar"></i> {{ session.scheduled_datetime|date:"D, M j · g:i A" }}<br>
+                                <i class="bi bi-hourglass-split"></i> {{ session.duration_minutes }} minutes<br>
+                                {% if session.location %}<i class="bi bi-geo-alt"></i> {{ session.location }}<br>{% endif %}
+                                <i class="bi bi-people"></i> {{ session.current_attendees }} attending
+                            </p>
+                            {% if session.description %}
+                                <p class="small flex-grow-1">{{ session.description }}</p>
+                            {% endif %}
+
+                            <div class="mt-auto pt-2">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <form method="post" action="{% url 'groups_web:session_rsvp' session.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="going">
+                                        <button type="submit"
+                                                class="btn btn-sm {% if session.my_status == 'going' %}btn-warning{% else %}btn-outline-dark{% endif %}">
+                                            Going
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'groups_web:session_rsvp' session.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="maybe">
+                                        <button type="submit"
+                                                class="btn btn-sm {% if session.my_status == 'maybe' %}btn-warning{% else %}btn-outline-dark{% endif %}">
+                                            Maybe
+                                        </button>
+                                    </form>
+                                    {% if session.my_status %}
+                                        <form method="post" action="{% url 'groups_web:session_rsvp_cancel' session.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancel RSVP</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div class="alert alert-light mb-5">
+            <i class="bi bi-info-circle"></i> No sessions scheduled for this group yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
