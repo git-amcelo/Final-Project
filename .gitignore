@@ -36,8 +36,6 @@ db.sqlite3-journal
 logs/*.log
 
 # Environment Variables
-.env
-.env.local
 .env.production
 
 # Node / Next.js
