@@ -3,6 +3,9 @@ export interface User {
   id: number;
   username: string;
   email: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
   role: 'student' | 'alumni';
   has_profile?: boolean;
 }
@@ -11,6 +14,9 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
   bio: string;
   profile_picture: string | null;
   profile_picture_url: string | null;
