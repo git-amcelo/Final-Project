@@ -306,10 +306,10 @@ export default function WorkoutDetailPage() {
                     <span className="font-data text-base font-medium">{workout.location || 'TBD'}</span>
                   </DetailItem>
 
-                  <DetailItem icon={<Target className="w-6 h-6" />} label="Level & Type">
+                  <DetailItem icon={<Target className="w-6 h-6" />} label="Intensity & Type">
                     <div className="font-data text-base">
-                      <div className="font-medium capitalize">{workout.skill_level || 'Any'} Level</div>
-                      <div className="text-gray-500 capitalize">{workout.workout_type || 'Workout'}</div>
+                      <div className="font-medium capitalize">{workout.intensity || 'Moderate'} Intensity</div>
+                      <div className="text-gray-500 capitalize">{workout.session_type === '1on1' ? 'One-on-One' : 'Group'}</div>
                     </div>
                   </DetailItem>
                 </div>
@@ -534,8 +534,8 @@ export default function WorkoutDetailPage() {
 
                 <div className="space-y-4 font-data text-base">
                   <InfoRow label="Status" value={workout.status || 'Unknown'} />
-                  <InfoRow label="Type" value={workout.workout_type || '1on1'} />
-                  <InfoRow label="Skill Level" value={workout.skill_level || 'Any'} />
+                  <InfoRow label="Type" value={workout.session_type === '1on1' ? 'One-on-One' : 'Group'} />
+                  <InfoRow label="Intensity" value={workout.intensity || 'Moderate'} />
                 </div>
               </div>
             </div>

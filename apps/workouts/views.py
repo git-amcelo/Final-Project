@@ -361,6 +361,24 @@ def available_sessions(request):
     if location_query:
         queryset = queryset.filter(location__icontains=location_query)
 
+    # Apply type and intensity filters
+    session_type_query = request.query_params.get('session_type')
+    if session_type_query:
+        queryset = queryset.filter(session_type=session_type_query)
+
+    intensity_query = request.query_params.get('intensity')
+    if intensity_query:
+        queryset = queryset.filter(intensity=intensity_query)
+
+    # Apply keyword search across title, description, and location
+    search_query = request.query_params.get('search')
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query)
+            | Q(description__icontains=search_query)
+            | Q(location__icontains=search_query)
+        )
+
     serializer = WorkoutSessionListSerializer(queryset, many=True)
     return Response(serializer.data)
 

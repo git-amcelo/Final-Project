@@ -49,10 +49,10 @@ export default function EditWorkoutPage() {
     scheduled_datetime: '',
     duration_minutes: 60,
     location: '',
-    max_participants: 1,
-    workout_type: '1on1',
+    max_participants: 2,
+    session_type: '1on1',
     focus_areas: [] as string[],
-    skill_level: 'intermediate',
+    intensity: 'moderate',
   });
 
   useEffect(() => {
@@ -78,10 +78,10 @@ export default function EditWorkoutPage() {
           scheduled_datetime: localDatetime,
           duration_minutes: data.duration_minutes || 60,
           location: data.location || '',
-          max_participants: data.max_participants || 1,
-          workout_type: data.session_type || data.workout_type || '1on1',
+          max_participants: data.max_participants || 2,
+          session_type: data.session_type || '1on1',
           focus_areas: data.focus_areas || [],
-          skill_level: data.skill_level || 'intermediate',
+          intensity: data.intensity || 'moderate',
         });
       } catch (err: any) {
         setError(err.message || 'Failed to load workout');
@@ -272,6 +272,74 @@ export default function EditWorkoutPage() {
                     {formData.location && !LOCATIONS.includes(formData.location) && (
                       <option value={formData.location}>{formData.location}</option>
                     )}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Workout Type */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm">
+              <h2 className="font-heading font-bold text-2xl mb-8 flex items-center gap-3">
+                <span className="w-8 h-8 bg-signal/10 rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 text-signal" />
+                </span>
+                Workout Type
+              </h2>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block font-data text-base font-semibold mb-3 text-gray-900">
+                    Workout Format <span className="text-signal">*</span>
+                  </label>
+                  <select
+                    name="session_type"
+                    value={formData.session_type}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      if (e.target.value === '1on1') {
+                        setFormData(prev => ({ ...prev, max_participants: 2 }));
+                      }
+                    }}
+                    required
+                    className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow bg-white"
+                  >
+                    <option value="1on1">One-on-One (1 Partner)</option>
+                    <option value="group">Group</option>
+                  </select>
+                </div>
+
+                {formData.session_type === 'group' && (
+                  <div>
+                    <label className="block font-data text-base font-semibold mb-3 text-gray-900">
+                      Max Participants <span className="text-signal">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      name="max_participants"
+                      value={formData.max_participants}
+                      onChange={handleInputChange}
+                      required
+                      min={2}
+                      max={20}
+                      className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block font-data text-base font-semibold mb-3 text-gray-900">
+                    Intensity <span className="text-signal">*</span>
+                  </label>
+                  <select
+                    name="intensity"
+                    value={formData.intensity}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow bg-white"
+                  >
+                    <option value="low">Low Intensity</option>
+                    <option value="moderate">Moderate Intensity</option>
+                    <option value="high">High Intensity</option>
                   </select>
                 </div>
               </div>

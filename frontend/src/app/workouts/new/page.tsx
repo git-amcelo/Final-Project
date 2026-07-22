@@ -44,10 +44,10 @@ export default function NewWorkoutPage() {
     scheduled_datetime: '',
     duration_minutes: 60,
     location: '',
-    max_participants: 1,
-    workout_type: '1on1',
+    max_participants: 2,
+    session_type: '1on1',
     focus_areas: [] as string[],
-    skill_level: 'intermediate',
+    intensity: 'moderate',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -233,19 +233,23 @@ export default function NewWorkoutPage() {
                     Workout Format <span className="text-signal">*</span>
                   </label>
                   <select
-                    name="workout_type"
-                    value={formData.workout_type}
-                    onChange={handleInputChange}
+                    name="session_type"
+                    value={formData.session_type}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      if (e.target.value === '1on1') {
+                        setFormData(prev => ({ ...prev, max_participants: 2 }));
+                      }
+                    }}
                     required
                     className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow bg-white"
                   >
                     <option value="1on1">One-on-One (1 Partner)</option>
-                    <option value="small_group">Small Group (2-4 Partners)</option>
-                    <option value="large_group">Large Group (5+ Partners)</option>
+                    <option value="group">Group</option>
                   </select>
                 </div>
 
-                {formData.workout_type !== '1on1' && (
+                {formData.session_type === 'group' && (
                   <div>
                     <label className="block font-data text-base font-semibold mb-3 text-gray-900">
                       Max Participants <span className="text-signal">*</span>
@@ -256,7 +260,7 @@ export default function NewWorkoutPage() {
                       value={formData.max_participants}
                       onChange={handleInputChange}
                       required
-                      min={formData.workout_type === 'small_group' ? 2 : 5}
+                      min={2}
                       max={20}
                       className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow"
                     />
@@ -265,19 +269,18 @@ export default function NewWorkoutPage() {
 
                 <div>
                   <label className="block font-data text-base font-semibold mb-3 text-gray-900">
-                    Skill Level <span className="text-signal">*</span>
+                    Intensity <span className="text-signal">*</span>
                   </label>
                   <select
-                    name="skill_level"
-                    value={formData.skill_level}
+                    name="intensity"
+                    value={formData.intensity}
                     onChange={handleInputChange}
                     required
                     className="w-full px-5 py-4 border border-gray-300 rounded-2xl font-data text-base focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal transition-shadow bg-white"
                   >
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                    <option value="any">All Levels</option>
+                    <option value="low">Low Intensity</option>
+                    <option value="moderate">Moderate Intensity</option>
+                    <option value="high">High Intensity</option>
                   </select>
                 </div>
               </div>

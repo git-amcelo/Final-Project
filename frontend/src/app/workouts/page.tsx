@@ -22,6 +22,9 @@ export default function WorkoutsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'my' | 'available'>('all');
   const [locationSearch, setLocationSearch] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [sessionTypeFilter, setSessionTypeFilter] = useState('');
+  const [intensityFilter, setIntensityFilter] = useState('');
 
   const LOCATIONS = [
     'Main Campus Gym',
@@ -45,13 +48,20 @@ export default function WorkoutsPage() {
         setMyWorkouts(data.results || data);
         setWorkouts([]);
       } else if (filter === 'available') {
-        const params = locationSearch ? { location: locationSearch } : undefined;
-        const data = await workoutApi.getAvailableWorkouts(params);
+        const params: Record<string, string> = {};
+        if (locationSearch) params.location = locationSearch;
+        if (keyword) params.search = keyword;
+        if (sessionTypeFilter) params.session_type = sessionTypeFilter;
+        if (intensityFilter) params.intensity = intensityFilter;
+        const data = await workoutApi.getAvailableWorkouts(Object.keys(params).length ? params : undefined);
         setWorkouts(data.results || data);
         setMyWorkouts([]);
       } else {
-        const params = locationSearch ? { search: locationSearch } : undefined;
-        const data = await workoutApi.listWorkouts(params);
+        const params: Record<string, string> = {};
+        if (keyword || locationSearch) params.search = keyword || locationSearch;
+        if (sessionTypeFilter) params.session_type = sessionTypeFilter;
+        if (intensityFilter) params.intensity = intensityFilter;
+        const data = await workoutApi.listWorkouts(Object.keys(params).length ? params : undefined);
         setWorkouts(data.results || data);
         setMyWorkouts([]);
       }
@@ -108,7 +118,33 @@ export default function WorkoutsPage() {
               </div>
             </div>
             
-            <form onSubmit={fetchWorkouts} className="flex items-center gap-2">
+            <form onSubmit={fetchWorkouts} className="flex flex-wrap items-center gap-2">
+              <input
+                type="text"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="Search title or description..."
+                className="px-4 py-2 border border-black rounded-xl font-data text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+              />
+              <select
+                value={sessionTypeFilter}
+                onChange={(e) => setSessionTypeFilter(e.target.value)}
+                className="px-4 py-2 border border-black rounded-xl font-data text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+              >
+                <option value="">All Types</option>
+                <option value="1on1">One-on-One</option>
+                <option value="group">Group</option>
+              </select>
+              <select
+                value={intensityFilter}
+                onChange={(e) => setIntensityFilter(e.target.value)}
+                className="px-4 py-2 border border-black rounded-xl font-data text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+              >
+                <option value="">Any Intensity</option>
+                <option value="low">Low</option>
+                <option value="moderate">Moderate</option>
+                <option value="high">High</option>
+              </select>
               <select
                 value={locationSearch}
                 onChange={(e) => setLocationSearch(e.target.value)}
@@ -267,7 +303,7 @@ function WorkoutCard({ workout }: { workout: Workout }) {
       {/* Action Button */}
       {!isPast && workout.status !== 'completed' && (
         <button className="w-full mt-4 btn-magnetic bg-signal text-white py-3 rounded-xl font-data text-sm font-medium">
-          {workout.status === 'accepted' ? 'View Details' : workout.workout_type === '1on1' && !workout.participant ? 'Request to Join' : 'View Details'}
+          {workout.status === 'accepted' ? 'View Details' : workout.session_type === '1on1' && !workout.participant ? 'Request to Join' : 'View Details'}
         </button>
       )}
     </div>

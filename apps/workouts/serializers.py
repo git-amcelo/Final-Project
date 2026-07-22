@@ -169,7 +169,7 @@ class WorkoutSessionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutSession
         fields = [
-            'id', 'title', 'session_type', 'status',
+            'id', 'title', 'session_type', 'status', 'intensity',
             'creator_name', 'participant_name', 'creator_picture',
             'scheduled_datetime', 'duration_minutes', 'location',
             'focus_areas', 'max_participants', 'current_participants',
