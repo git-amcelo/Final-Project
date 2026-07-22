@@ -298,6 +298,8 @@ from django.urls import reverse
 # pyrefly: ignore [missing-import]
 from django.utils import timezone
 # pyrefly: ignore [missing-import]
+from django.db import transaction
+# pyrefly: ignore [missing-import]
 from django.utils.http import url_has_allowed_host_and_scheme
 # pyrefly: ignore [missing-import]
 from django.views.generic import CreateView, DetailView, ListView
@@ -328,6 +330,7 @@ class SignUpView(CreateView):
             return redirect('web:home')
         return super().dispatch(request, *args, **kwargs)
 
+    @transaction.atomic
     def form_valid(self, form):
         user = form.save()
         UserProfile.objects.get_or_create(user=user)
