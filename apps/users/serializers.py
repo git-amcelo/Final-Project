@@ -136,9 +136,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return None
 
     def update(self, instance, validated_data):
-        # Handle nested user fields
-        user_data = validated_data.pop('user', {})
-        for attr, value in user_data.items():
+        user_fields = ['first_name', 'last_name', 'email', 'phone']
+        nested_user_data = {}
+
+        for field in user_fields:
+            if field in validated_data:
+                nested_user_data[field] = validated_data.pop(field)
+
+        for attr, value in nested_user_data.items():
+            if attr == 'email' and value:
+                value = value.lower().strip()
             setattr(instance.user, attr, value)
         instance.user.save()
 
