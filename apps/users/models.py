@@ -8,11 +8,14 @@ from django.contrib.auth.models import AbstractUser
 # pyrefly: ignore [missing-import]
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from .managers import UserManager
+
 
 class User(AbstractUser):
     """
-    Custom User model extending Django's AbstractUser
-    Adds role and student-specific fields
+    Custom User model extending Django's AbstractUser.
+    Adds role and student-specific fields while keeping authentication
+    consistent with the standard Django auth stack.
     """
     ROLE_CHOICES = [
         ('student', 'Student'),
@@ -22,6 +25,13 @@ class User(AbstractUser):
     # Override AbstractUser fields to make them truly optional
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'username'
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['email']
+
+    objects = UserManager()
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
     student_id = models.CharField(max_length=20, unique=True, null=True, blank=True)
@@ -30,8 +40,15 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['username']
+
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
+
+    @property
+    def display_name(self):
+        return self.get_full_name() or self.username
 
 
 class UserProfile(models.Model):
