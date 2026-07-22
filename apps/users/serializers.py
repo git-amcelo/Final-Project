@@ -82,19 +82,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
 
-        # Remove first_name and last_name if they're empty strings
-        # AbstractUser doesn't allow blank strings for these fields
         if 'first_name' in validated_data and not validated_data['first_name']:
             validated_data.pop('first_name')
         if 'last_name' in validated_data and not validated_data['last_name']:
             validated_data.pop('last_name')
-            
+
+        email = validated_data.get('email')
+        if email:
+            validated_data['email'] = email.lower().strip()
+
         gender = validated_data.pop('gender', '')
 
-        user = User.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
-        # Create profile with gender
+        user = User.objects.create_user(
+            password=password,
+            **validated_data,
+        )
         UserProfile.objects.create(user=user, gender=gender)
         return user
 
