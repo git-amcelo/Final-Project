@@ -37,6 +37,7 @@ logs/*.log
 
 # Environment Variables
 .env.production
+.env.local
 
 # Node / Next.js
 node_modules/
