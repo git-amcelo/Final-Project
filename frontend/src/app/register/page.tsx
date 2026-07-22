@@ -11,6 +11,10 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    student_id: '',
     password: '',
     password_confirm: '',
     role: 'student',
@@ -124,6 +128,64 @@ export default function RegisterPage() {
             className="w-full px-5 py-4 border-2 border-black/20 rounded-2xl font-heading text-lg focus:outline-none focus:border-signal focus:ring-4 focus:ring-signal/10 transition-all duration-300"
             placeholder="your.email@uwindsor.ca"
           />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="first_name" className="block font-data text-sm font-bold tracking-wider">
+              FIRST NAME
+            </label>
+            <input
+              id="first_name"
+              type="text"
+              value={formData.first_name}
+              onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+              className="w-full px-5 py-4 border-2 border-black/20 rounded-2xl font-heading text-lg focus:outline-none focus:border-signal focus:ring-4 focus:ring-signal/10 transition-all duration-300"
+              placeholder="First name"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="last_name" className="block font-data text-sm font-bold tracking-wider">
+              LAST NAME
+            </label>
+            <input
+              id="last_name"
+              type="text"
+              value={formData.last_name}
+              onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+              className="w-full px-5 py-4 border-2 border-black/20 rounded-2xl font-heading text-lg focus:outline-none focus:border-signal focus:ring-4 focus:ring-signal/10 transition-all duration-300"
+              placeholder="Last name"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="phone" className="block font-data text-sm font-bold tracking-wider">
+              PHONE
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="w-full px-5 py-4 border-2 border-black/20 rounded-2xl font-heading text-lg focus:outline-none focus:border-signal focus:ring-4 focus:ring-signal/10 transition-all duration-300"
+              placeholder="Optional"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="student_id" className="block font-data text-sm font-bold tracking-wider">
+              STUDENT ID
+            </label>
+            <input
+              id="student_id"
+              type="text"
+              value={formData.student_id}
+              onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
+              className="w-full px-5 py-4 border-2 border-black/20 rounded-2xl font-heading text-lg focus:outline-none focus:border-signal focus:ring-4 focus:ring-signal/10 transition-all duration-300"
+              placeholder="Optional"
+            />
+          </div>
         </div>
 
         {/* Enhanced Password Field with Strength Indicator */}

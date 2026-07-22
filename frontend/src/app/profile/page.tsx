@@ -74,6 +74,10 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       await userApi.updateProfile({
+        first_name: profile.first_name || '',
+        last_name: profile.last_name || '',
+        email: profile.email,
+        phone: profile.phone || '',
         bio: profile.bio,
         fitness_level: profile.fitness_level,
         fitness_goals: profile.fitness_goals,
@@ -203,10 +207,13 @@ export default function ProfilePage() {
             <div className="pt-20 px-8 pb-8">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <h2 className="font-heading font-bold text-3xl">{profile.username}</h2>
+                  <h2 className="font-heading font-bold text-3xl">
+                    {[profile.first_name, profile.last_name].filter(Boolean).join(' ') || profile.username}
+                  </h2>
                   <p className="font-data text-black/60 capitalize">
                     {profile.fitness_level} • {profile.total_ratings} reviews
                   </p>
+                  <p className="font-data text-black/60 mt-1">@{profile.username}</p>
                 </div>
                 <div className="flex items-center gap-2 bg-signal/10 px-4 py-2 rounded-xl">
                   <Trophy className="w-5 h-5 text-signal" />
@@ -308,10 +315,19 @@ export default function ProfilePage() {
 function ViewMode({ profile }: { profile: UserProfile }) {
   return (
     <>
-      {/* Bio */}
-      <div className="mb-6">
-        <h3 className="font-heading font-bold text-lg mb-2">About</h3>
-        <p className="font-data text-black/70">{profile.bio || 'No bio added yet.'}</p>
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <h3 className="font-heading font-bold text-lg mb-2">Account</h3>
+          <div className="space-y-2 font-data text-black/70">
+            <div><span className="font-bold">Email:</span> {profile.email}</div>
+            {profile.phone && <div><span className="font-bold">Phone:</span> {profile.phone}</div>}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-heading font-bold text-lg mb-2">About</h3>
+          <p className="font-data text-black/70">{profile.bio || 'No bio added yet.'}</p>
+        </div>
       </div>
 
       {/* Fitness Goals */}
@@ -416,7 +432,46 @@ function EditMode({
 
   return (
     <div className="space-y-6">
-      {/* Bio */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block font-data text-sm font-medium mb-2">FIRST NAME</label>
+          <input
+            value={profile.first_name || ''}
+            onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
+            className="w-full px-4 py-3 border border-black rounded-xl font-heading"
+          />
+        </div>
+        <div>
+          <label className="block font-data text-sm font-medium mb-2">LAST NAME</label>
+          <input
+            value={profile.last_name || ''}
+            onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+            className="w-full px-4 py-3 border border-black rounded-xl font-heading"
+          />
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block font-data text-sm font-medium mb-2">EMAIL</label>
+          <input
+            type="email"
+            value={profile.email}
+            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+            className="w-full px-4 py-3 border border-black rounded-xl font-heading"
+          />
+        </div>
+        <div>
+          <label className="block font-data text-sm font-medium mb-2">PHONE</label>
+          <input
+            type="tel"
+            value={profile.phone || ''}
+            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+            className="w-full px-4 py-3 border border-black rounded-xl font-heading"
+          />
+        </div>
+      </div>
+
       <div>
         <label className="block font-data text-sm font-medium mb-2">BIO</label>
         <textarea
