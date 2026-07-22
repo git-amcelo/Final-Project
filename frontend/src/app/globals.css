@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Preset C: Brutalist Signal */
+    --color-paper: 233 228 221;
+    --color-signal: 230 59 46;
+    --color-offwhite: 245 243 238;
+    --color-black: 17 17 17;
+
+    --font-heading: "Space Grotesk", system-ui, sans-serif;
+    --font-drama: "DM Serif Display", Georgia, serif;
+    --font-data: "Space Mono", monospace;
+  }
+
+  * {
+    @apply border-black;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-offwhite text-black antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Noise overlay for texture */
+  .noise-overlay::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Button magnetic hover effect */
+@layer components {
+  .btn-magnetic {
+    @apply relative overflow-hidden transition-transform duration-200 ease-out;
+  }
+
+  .btn-magnetic:hover {
+    @apply scale-[1.03];
+  }
+
+  .btn-magnetic::after {
+    content: "";
+    @apply absolute inset-0 bg-signal translate-x-full transition-transform duration-300 ease-out;
+    z-index: -1;
+  }
+
+  .btn-magnetic:hover::after {
+    @apply translate-x-0;
+  }
+}
+
+/* Shimmer animation for CTA buttons */
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
