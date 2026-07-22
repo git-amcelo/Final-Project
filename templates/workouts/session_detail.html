@@ -15,7 +15,7 @@
                             <span class="badge text-bg-light">{{ session.get_session_type_display }}</span>
                             {% if session.is_past %}
                                 <span class="badge text-bg-secondary">Past</span>
-                            {% else %}
+                            {% elif not user_join_request %}
                                 <span class="badge text-bg-success">{{ session.get_status_display }}</span>
                             {% endif %}
                         </div>
@@ -70,6 +70,20 @@
                                 With {{ session.participant.username }}</div>
                         {% endif %}
                     </div>
+
+                    {% if accepted_participants %}
+                        <h2 class="h6 fw-bold mt-4">Joined</h2>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for sp in accepted_participants %}
+                                {% if sp.user.profile %}
+                                    <a href="{% url 'users_web:member_detail' sp.user.profile.pk %}"
+                                       class="badge text-bg-light text-decoration-none">{{ sp.user.username }}</a>
+                                {% else %}
+                                    <span class="badge text-bg-light">{{ sp.user.username }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
                     {% if session.notes and user.is_authenticated %}
                         <h2 class="h6 fw-bold mt-4">Notes for participants</h2>

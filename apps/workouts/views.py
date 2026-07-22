@@ -463,6 +463,11 @@ class SessionDetailView(DetailView):
         session = self.object
         user = self.request.user
 
+        if session.session_type == 'group':
+            context['accepted_participants'] = session.participants.filter(
+                status='accepted'
+            ).select_related('user', 'user__profile')
+
         if user.is_authenticated:
             is_creator = session.creator == user
             is_participant = (
