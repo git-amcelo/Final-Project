@@ -145,8 +145,13 @@ class WorkoutGroup(models.Model):
 
     @property
     def member_count_actual(self):
-        """Get actual member count"""
+        """Get the live active member count from memberships."""
         return self.members.filter(status='active').count()
+
+    @property
+    def can_accept_members(self):
+        """Return whether the group still has room for more members."""
+        return self.member_count_actual < self.max_members
 
 
 class GroupMembership(models.Model):

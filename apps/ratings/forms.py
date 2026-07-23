@@ -12,6 +12,10 @@ STAR_CHOICES = [(i, f'{i} ★') for i in range(1, 6)]
 class RatingForm(forms.ModelForm):
     """Rate another member from 1 to 5 stars with optional details."""
 
+    def clean_comment(self):
+        comment = self.cleaned_data.get('comment', '')
+        return comment.strip()
+
     score = forms.TypedChoiceField(
         coerce=int,
         choices=STAR_CHOICES,
@@ -38,6 +42,6 @@ class RatingForm(forms.ModelForm):
         fields = ('score', 'punctuality', 'communication', 'comment', 'would_workout_again')
         widgets = {
             'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
-                                             'placeholder': 'How was the workout?'}),
+                                             'placeholder': 'Share a quick note about the workout'}),
             'would_workout_again': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

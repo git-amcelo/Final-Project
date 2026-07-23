@@ -3,7 +3,7 @@ Views for workout group management
 """
 
 # pyrefly: ignore [missing-import]
-from rest_framework import generics, status, permissions, filters
+from rest_framework import generics, status, permissions, filters # pyright: ignore[reportMissingImports]
 # pyrefly: ignore [missing-import]
 from rest_framework.decorators import api_view, permission_classes
 # pyrefly: ignore [missing-import]
@@ -603,7 +603,7 @@ def join_group_web(request, slug):
         messages.info(request, 'You are already part of this group.')
     elif group.group_type == 'private':
         messages.error(request, 'This group is invite-only.')
-    elif group.member_count_actual >= group.max_members:
+    elif not group.can_accept_members:
         messages.error(request, 'This group is full.')
     else:
         status_value = 'active' if group.group_type == 'open' else 'pending'
@@ -615,6 +615,8 @@ def join_group_web(request, slug):
                 group=group, user=request.user, role='member', status=status_value,
             )
         if status_value == 'active':
+            group.member_count = _F('member_count') + 1
+            group.save(update_fields=['member_count'])
             messages.success(request, f'Welcome to {group.name}!')
         else:
             messages.info(request, 'Your request to join is pending approval.')
@@ -636,6 +638,8 @@ def leave_group_web(request, slug):
     else:
         membership.status = 'inactive'
         membership.save()
+        group.member_count = _F('member_count') - 1
+        group.save(update_fields=['member_count'])
         messages.info(request, f'You have left {group.name}.')
     return redirect('groups_web:detail', slug=slug)
 

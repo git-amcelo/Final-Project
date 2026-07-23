@@ -364,7 +364,8 @@ def rate_member(request, user_id):
             rating.to_user = to_user
             rating.session = session
             rating.save()
-            messages.success(request, f'Your review of {to_user.username} has been saved.')
+            action = 'updated' if existing is not None else 'saved'
+            messages.success(request, f'Your review of {to_user.username} has been {action}.')
             if session:
                 return redirect('workouts_web:detail', pk=session.pk)
             if hasattr(to_user, 'profile'):

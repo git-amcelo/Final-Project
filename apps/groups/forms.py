@@ -10,6 +10,18 @@ from .models import WorkoutGroup, GroupSession
 class GroupForm(forms.ModelForm):
     """Create or edit a workout group (includes an image upload)."""
 
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '').strip()
+        if not name:
+            raise forms.ValidationError('Group name is required.')
+        return name
+
+    def clean_max_members(self):
+        max_members = self.cleaned_data.get('max_members')
+        if max_members is not None and max_members < 2:
+            raise forms.ValidationError('Maximum members must be at least 2.')
+        return max_members
+
     class Meta:
         model = WorkoutGroup
         fields = (
@@ -68,7 +80,7 @@ class GroupSearchForm(forms.Form):
         required=False,
         label='Keyword',
         widget=forms.TextInput(attrs={'class': 'form-control',
-                                      'placeholder': 'Search groups...'}),
+                                      'placeholder': 'Search groups by name or location'}),
     )
     group_type = forms.ChoiceField(
         required=False,
