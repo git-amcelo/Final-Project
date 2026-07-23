@@ -4,6 +4,7 @@ ASGI config for GymBuddy project.
 import os
 import sys
 from pathlib import Path
+# pyrefly: ignore [missing-import]
 from django.core.asgi import get_asgi_application
 
 # Add parent directory to path
