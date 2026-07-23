@@ -143,13 +143,23 @@ class MatchingPreferencesView(views.APIView):
         serializer.is_valid(raise_exception=True)
 
         # Update preferences
-        for field in ['preferred_genders', 'availability', 'gym_preferences', 'interests']:
+        for field in [
+            'preferred_genders',
+            'availability',
+            'gym_preferences',
+            'fitness_goals',
+            'interests',
+        ]:
             if field in serializer.validated_data:
                 setattr(profile, field, serializer.validated_data[field])
 
         profile.save()
 
         return Response(self.get(request).data)
+
+    def patch(self, request):
+        """Partially update matching preferences."""
+        return self.put(request)
 
 
 class TopMatchesView(views.APIView):

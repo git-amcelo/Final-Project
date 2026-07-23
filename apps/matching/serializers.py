@@ -50,11 +50,33 @@ class MatchingPreferencesSerializer(serializers.Serializer):
     """
     Serializer for user's matching preferences
     """
-    preferred_genders = serializers.ListField(required=False)
+    preferred_genders = serializers.ListField(
+        child=serializers.ChoiceField(choices=['M', 'F', 'O', 'N']),
+        required=False,
+    )
     availability = serializers.DictField(required=False)
-    gym_preferences = serializers.ListField(required=False)
-    fitness_level_preference = serializers.CharField(required=False)
-    goal_priorities = serializers.ListField(required=False)
+    gym_preferences = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+    )
+    fitness_goals = serializers.ListField(
+        child=serializers.ChoiceField(
+            choices=[
+                'weight_loss',
+                'muscle_gain',
+                'endurance',
+                'strength',
+                'general',
+                'flexibility',
+                'sports_performance',
+            ]
+        ),
+        required=False,
+    )
+    interests = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+    )
 
 
 class MatchCompatibilityDetailSerializer(serializers.Serializer):

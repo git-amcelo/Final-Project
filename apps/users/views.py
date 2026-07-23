@@ -96,16 +96,21 @@ class UserListView(generics.ListAPIView):
     search_fields = ['user__username', 'bio']
 
     def get_queryset(self):
-        # Get blocked user IDs
+        # Hide blocks in either direction so a blocker is not discoverable.
         blocked_ids = BlockedUser.objects.filter(
             blocker=self.request.user
         ).values_list('blocked_id', flat=True)
+        blocked_by_ids = BlockedUser.objects.filter(
+            blocked=self.request.user
+        ).values_list('blocker_id', flat=True)
 
         # Exclude blocked users, self, and invisible profiles
         queryset = UserProfile.objects.filter(
             is_visible=True
         ).exclude(
-            Q(user_id__in=blocked_ids) | Q(user_id=self.request.user.id)
+            Q(user_id__in=blocked_ids)
+            | Q(user_id__in=blocked_by_ids)
+            | Q(user_id=self.request.user.id)
         )
 
         return queryset.select_related('user')
@@ -129,8 +134,8 @@ class FavoriteListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         # Prevent adding self or blocked users
-        favorite_id = self.request.data.get('favorite')
-        if favorite_id == self.request.user.id:
+        favorite = serializer.validated_data['favorite']
+        if favorite == self.request.user:
 # pyrefly: ignore [missing-import]
             from rest_framework.exceptions import ValidationError
             raise ValidationError({'error': 'Cannot add yourself to favorites'})
@@ -138,11 +143,19 @@ class FavoriteListView(generics.ListCreateAPIView):
         # Check if already favorited
         if FavoriteUser.objects.filter(
             user=self.request.user,
-            favorite_id=favorite_id
+            favorite=favorite,
         ).exists():
 # pyrefly: ignore [missing-import]
             from rest_framework.exceptions import ValidationError
             raise ValidationError({'error': 'User already in favorites'})
+
+        if BlockedUser.objects.filter(
+            Q(blocker=self.request.user, blocked=favorite)
+            | Q(blocker=favorite, blocked=self.request.user)
+        ).exists():
+# pyrefly: ignore [missing-import]
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({'error': 'Cannot favorite a blocked user'})
 
         serializer.save(user=self.request.user)
 
@@ -177,12 +190,25 @@ class BlockedUserListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         # Prevent blocking self
-        blocked_id = self.request.data.get('blocked')
-        if blocked_id == self.request.user.id:
+        blocked = serializer.validated_data['blocked']
+        if blocked == self.request.user:
 # pyrefly: ignore [missing-import]
             from rest_framework.exceptions import ValidationError
             raise ValidationError({'error': 'Cannot block yourself'})
 
+        if BlockedUser.objects.filter(
+            blocker=self.request.user,
+            blocked=blocked,
+        ).exists():
+# pyrefly: ignore [missing-import]
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({'error': 'User already blocked'})
+
+        # Keep the API behavior consistent with the template-site block action.
+        FavoriteUser.objects.filter(
+            user=self.request.user,
+            favorite=blocked,
+        ).delete()
         serializer.save(blocker=self.request.user)
 
 
@@ -379,10 +405,17 @@ class MemberListView(LoginRequiredMixin, ListView):
         blocked_ids = BlockedUser.objects.filter(
             blocker=self.request.user
         ).values_list('blocked_id', flat=True)
+        blocked_by_ids = BlockedUser.objects.filter(
+            blocked=self.request.user
+        ).values_list('blocker_id', flat=True)
         queryset = (
             UserProfile.objects
             .filter(is_visible=True)
-            .exclude(Q(user_id__in=blocked_ids) | Q(user=self.request.user))
+            .exclude(
+                Q(user_id__in=blocked_ids)
+                | Q(user_id__in=blocked_by_ids)
+                | Q(user=self.request.user)
+            )
             .select_related('user')
             .order_by('-average_rating', '-last_active')
         )

@@ -253,11 +253,16 @@ def find_matches_for_user(user, filters=None, limit=20):
     blocked_ids = BlockedUser.objects.filter(
         blocker=user
     ).values_list('blocked_id', flat=True)
+    blocked_by_ids = BlockedUser.objects.filter(
+        blocked=user
+    ).values_list('blocker_id', flat=True)
 
     queryset = UserProfile.objects.filter(
         is_visible=True
     ).exclude(
-        Q(user_id__in=blocked_ids) | Q(user_id=user.id)
+        Q(user_id__in=blocked_ids)
+        | Q(user_id__in=blocked_by_ids)
+        | Q(user_id=user.id)
     ).select_related('user')
 
     if filters.get('fitness_level') and str(filters['fitness_level']).strip():
